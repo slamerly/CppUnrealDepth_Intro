@@ -32,6 +32,8 @@ void UGravityGunController::SetupInputComponentGravityGun(AMyCharacter* InCharac
 
 	InputComponent->BindAction(TakeObjectInputName, EInputEvent::IE_Pressed, this, &UGravityGunController::OnTakeObjectInputPressed);
 	InputComponent->BindAction(ThrowObjectInputName, EInputEvent::IE_Pressed, this, &UGravityGunController::OnThrowObjectInputPressed);
+	InputComponent->BindAction(ThrowObjectInputName, EInputEvent::IE_Released, this, &UGravityGunController::OnThrowObjectInputReleased);
+	InputComponent->BindAction(UpSizeRaycastInputName, EInputEvent::IE_Pressed, this, &UGravityGunController::OnUpSizeRaycastInputPressed);
 
 }
 
@@ -46,5 +48,17 @@ void UGravityGunController::OnThrowObjectInputPressed()
 {
 	if (GravityGunComponent)
 		GravityGunComponent->OnThrowObjectInputPressed();
+}
+
+void UGravityGunController::OnUpSizeRaycastInputPressed()
+{
+	if (GravityGunComponent)
+		GravityGunComponent->OnUpSizeRaycastInputPressed();
+}
+
+void UGravityGunController::OnThrowObjectInputReleased()
+{
+	if (GravityGunComponent)
+		GravityGunComponent->OnThrowObjectInputReleased();
 }
 

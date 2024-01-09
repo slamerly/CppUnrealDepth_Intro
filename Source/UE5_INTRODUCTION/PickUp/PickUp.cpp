@@ -25,3 +25,34 @@ void APickUp::Tick(float DeltaTime)
 
 }
 
+void APickUp::StartPickUpDetonationTimer()
+{
+	float DestructionTime = PickUpStruct.DestructionTimer;
+
+	// Prepare Timer
+	FTimerManager& TimerManager = this->GetWorldTimerManager();
+	TimerManager.ClearTimer(ProjectileDestructionionTimerHandle);
+	TimerManager.SetTimer(ProjectileDestructionionTimerHandle, this, &APickUp::DestroyPickUp, DestructionTime, false);
+}
+
+void APickUp::DestroyPickUp()
+{
+	ClearTimer();
+
+	OnPickUpDestroy.Broadcast();
+
+	Destroy();
+}
+
+EPickUpType APickUp::GetPickUpType()
+{
+	return PickUpStruct.PickUpType;
+}
+
+void APickUp::ClearTimer()
+{
+	// Clear Timer
+	FTimerManager& TimerManager = this->GetWorldTimerManager();
+	TimerManager.ClearTimer(ProjectileDestructionionTimerHandle);
+}
+

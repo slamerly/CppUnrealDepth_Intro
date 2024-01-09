@@ -26,6 +26,10 @@ protected:
 	FName TakeObjectInputName = FName();
 	UPROPERTY(EditAnywhere, Category = "Input")
 	FName ThrowObjectInputName = FName();
+	UPROPERTY(EditAnywhere, Category = "Input")
+	FName UpSizeRaycastInputName = FName();
+	UPROPERTY(EditAnywhere, Category = "Input")
+	FName DownSizeRaycastInputName = FName();
 
 protected:
 	class AMyCharacter* Character = nullptr;
@@ -37,5 +41,7 @@ public:
 protected:
 	void OnTakeObjectInputPressed();
 	void OnThrowObjectInputPressed();
+	void OnUpSizeRaycastInputPressed();
+	void OnThrowObjectInputReleased();
 		
 };

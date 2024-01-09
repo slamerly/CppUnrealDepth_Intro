@@ -26,6 +26,8 @@ public:
 
 	void OnTakeObjectInputPressed();
 	void OnThrowObjectInputPressed();
+	void OnThrowObjectInputReleased();
+	void OnUpSizeRaycastInputPressed();
 	void SetCharacter(class AMyCharacter* InCharacter);
 		
 
@@ -34,9 +36,53 @@ public:
 	TEnumAsByte<ETraceTypeQuery> SimpleCollisionTraceChannel;
 	ECollisionChannel GravityGunCollisionChannel;
 
+	float ClampMinRaycast = 0.f;
+	float ClampMaxRaycast = 3000.f;
+
 	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision", meta = (ClampMin = "0.0", ClampMax = "3000.0"))
 	float RaycastSize = 500.f;
+	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision", meta = (ClampMin = "0.0", ClampMax = "100.0"))
+	float ScaleUpRycast = 50.f;
 
 	class AMyCharacter* Character = nullptr;
 	TWeakObjectPtr<class APlayerCameraManager> CameraManager = nullptr;
+
+	//Pick up
+protected:
+	class APickUp* CurrentPickUp = nullptr;
+	UStaticMeshComponent* PickUpCube = nullptr;
+	FName PreviousCollisionProfile = NAME_None; // comme nullptr
+
+	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision", meta = (ClampMin = "0.0", ClampMax = "3000.0"))
+	float PickUpDistanceFromPlayer = 200.f;
+	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision", meta = (ClampMin = "0.0", ClampMax = "10000.0"))
+	float PickUpThrowForce = 2000.f;
+	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision")
+	FVector PickUpAngularForce = FVector(5000.f);
+
+	// event on pick up destroy
+protected:
+	UFUNCTION()
+	void OnHoldPickUpDestroyed();
+
+	//exo2
+	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision", meta = (ClampMin = "0.0", ClampMax = "10.0"))
+	float DurationMaxThrowHolding = 5.f;
+	UPROPERTY(EditAnywhere, Category = "GravityGun|Collision", meta = (ClampMin = "1.0", ClampMax = "5.0"))
+	float PickUpThrowForceMax = 50000.f;
+
+	bool bHoldingThrow = false;
+	float TimerHoldingTrow = 0.f;
+	float CurrentThrowForce = 1.f;
+
+protected:
+	void UpdatePickUpLocation();
+	void ReleasePickUp(bool bThrow = false);
+
+	//Debug
+protected:
+	UPROPERTY(EditAnywhere, Category = "GravityGun| Debug")
+	bool bDrawDebugRaycast = false;
+	UPROPERTY(EditAnywhere, Category = "GravityGun| Debug", meta = (ClampMin = "0.1", ClampMax = "30.0"))
+	float TimerDebugRaycast = 5.f;
 };
