@@ -27,6 +27,8 @@ protected:
 	FName LookUpInputName = FName();
 	UPROPERTY(EditAnywhere, Category = "Input|Mouse")
 	FName LookRightInputName = FName();
+	UPROPERTY(EditAnywhere, Category = "Input|Score")
+	FName CountScoreInputName = FName();
 	
 
 protected:
@@ -35,6 +37,13 @@ protected:
 	void SetupCameraComponent();
 
 	void Jump();
+
+	// Score
+protected:
+	void CountScore();
+
+protected:
+	TArray<AActor*> Goals;
 
 public:
 	virtual void SetupInputComponent() override;

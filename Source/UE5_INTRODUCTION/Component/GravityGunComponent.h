@@ -7,6 +7,8 @@
 #include "GravityGunComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPickUpTakenDelegate, FString, PickUpName);
+
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UE5_INTRODUCTION_API UGravityGunComponent : public UActorComponent
 {
@@ -78,6 +80,11 @@ protected:
 protected:
 	void UpdatePickUpLocation();
 	void ReleasePickUp(bool bThrow = false);
+
+	// exemple - event in bp
+public:
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
+	FPickUpTakenDelegate OnPickUpTake;
 
 	//Debug
 protected:

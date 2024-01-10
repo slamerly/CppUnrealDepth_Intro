@@ -1,8 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "Character/MyCharacter.h"
 #include "Controller/MyPlayerController.h"
 #include "Controller/GravityGunController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Goal/Goal.h"
 
 void AMyPlayerController::MoveForward(float Value)
 {
@@ -32,6 +32,24 @@ void AMyPlayerController::Jump()
 		Character->Jump();
 }
 
+void AMyPlayerController::CountScore()
+{
+	if (Goals.Num() == 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("there's no goal in the map"));
+	}
+
+	for (AActor* CurrentGoal : Goals)
+	{
+		AGoal* Goal = Cast<AGoal>(CurrentGoal);
+		if (Goal)
+		{
+			int PickUpInGoal = Goal->CountPickUpInGoal();
+			UE_LOG(LogTemp, Log, TEXT("there's %d pick up in %s"), PickUpInGoal, *Goal->GetName());
+		}
+	}
+}
+
 void AMyPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -41,6 +59,10 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAxis(MoveRightInputName, this, &AMyPlayerController::MoveRight);
 
 	InputComponent->BindAction(JumpInputName, EInputEvent::IE_Pressed, this, &AMyPlayerController::Jump);
+
+	//bid score
+	FInputActionBinding& ScoreInputActionBinding = InputComponent->BindAction(CountScoreInputName, EInputEvent::IE_Pressed, this, &AMyPlayerController::CountScore);
+	ScoreInputActionBinding.bConsumeInput = false;
 }
 
 void AMyPlayerController::SetPawn(APawn* InPawn)
@@ -75,6 +97,13 @@ void AMyPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	GetWorld()->OnWorldBeginPlay.AddUObject(this, &AMyPlayerController::LateBeginPlay);
+
+	// Get All Goals
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AGoal::StaticClass(), Goals);
+	if (Goals.Num() == 0)
+	{
+		UE_LOG(LogTemp, Log, TEXT("there's no goal in the map"));
+	}
 }
 
 void AMyPlayerController::LateBeginPlay()

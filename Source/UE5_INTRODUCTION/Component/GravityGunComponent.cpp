@@ -79,26 +79,30 @@ void UGravityGunComponent::OnTakeObjectInputPressed()
 	if (!PickUpCube)
 		return;
 
+	//disable physics
+	PickUpCube->SetSimulatePhysics(false);
+
 	//Update collision profile
 	PreviousCollisionProfile = PickUpCube->GetCollisionProfileName();
 	PickUpCube->SetCollisionProfileName(UCollisionProfile::NoCollision_ProfileName);
-
-	//disable physics
-	PickUpCube->SetSimulatePhysics(false);
+	
 
 	// Reset timer if required
 	if(CurrentPickUp->GetPickUpType() != EPickUpType::Normal)
 		CurrentPickUp->ClearTimer();
 
 	// chek if destruction timer required
-	if (CurrentPickUp->GetPickUpType() != EPickUpType::DestroyAfterPickUp)
+	if (CurrentPickUp->GetPickUpType() == EPickUpType::DestroyAfterPickUp)
 	{
+		UE_LOG(LogTemp, Log, TEXT("test"));
 		CurrentPickUp->StartPickUpDetonationTimer();
 
 		CurrentPickUp->OnPickUpDestroy.AddUniqueDynamic(this, &UGravityGunComponent::OnHoldPickUpDestroyed);
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("static mesh found"));
+
+	OnPickUpTake.Broadcast(CurrentPickUp->GetName());
 }
 
 void UGravityGunComponent::OnThrowObjectInputPressed()
