@@ -1,6 +1,7 @@
 #include "Character/MyCharacter.h"
 #include "Controller/MyPlayerController.h"
 #include "Controller/GravityGunController.h"
+#include "Controller/SpawnerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Goal/Goal.h"
 
@@ -112,4 +113,9 @@ void AMyPlayerController::LateBeginPlay()
 
 	if (GravityGunController)
 		GravityGunController->SetupInputComponentGravityGun(Character, InputComponent);
+
+	SpwanerController = GetComponentByClass<USpawnerController>();
+
+	if (SpwanerController)
+		SpwanerController->SetupInputComponentSpawnerPickUp(Character, InputComponent);
 }

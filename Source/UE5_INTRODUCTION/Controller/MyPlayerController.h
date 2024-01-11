@@ -67,6 +67,9 @@ protected:
 	// Gravity gun
 	class UGravityGunController* GravityGunController = nullptr;
 
+	// spawner pickup
+	class USpawnerController* SpwanerController = nullptr;
+
 public:
 	virtual void BeginPlay() override;
 	void LateBeginPlay();

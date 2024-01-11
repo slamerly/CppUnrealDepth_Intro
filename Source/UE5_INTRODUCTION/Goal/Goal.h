@@ -43,7 +43,7 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Goal|Team")
 	ETeam GoalTeam = ETeam::None;
-	AMyCharacter* character = nullptr;
+	//AMyCharacter* character = nullptr;
 
 public:
 	UFUNCTION()

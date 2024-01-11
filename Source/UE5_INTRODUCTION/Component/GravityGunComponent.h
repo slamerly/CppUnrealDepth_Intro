@@ -92,4 +92,9 @@ protected:
 	bool bDrawDebugRaycast = false;
 	UPROPERTY(EditAnywhere, Category = "GravityGun| Debug", meta = (ClampMin = "0.1", ClampMax = "30.0"))
 	float TimerDebugRaycast = 5.f;
+
+public:
+	APickUp* GetCurrentPickUp() { return CurrentPickUp; }
+	void SpawnInHand(APickUp* InPickUp);
+	void PickUpDestroy();
 };

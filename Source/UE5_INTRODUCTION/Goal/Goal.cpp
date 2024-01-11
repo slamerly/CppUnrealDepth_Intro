@@ -60,8 +60,8 @@ int AGoal::CountPickUpInGoal()
 	return NumberOfPickUpInGoal;
 }
 
-void AGoal::SetCharacter(AMyCharacter* InCharacter)
-{
-	character = InCharacter;
-}
+//void AGoal::SetCharacter(AMyCharacter* InCharacter)
+//{
+//	character = InCharacter;
+//}
 

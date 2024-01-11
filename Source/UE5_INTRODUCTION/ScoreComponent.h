@@ -31,7 +31,7 @@ public:
 
 protected:
 	TArray<FTeamStrcut> Scores;
-	TStaticArray<FTeamStrcut, ETeam::Max> TeamStatic;
+	//TStaticArray<FTeamStrcut, ETeam::Max> TeamStatic;
 
 protected:
 	// Called when the game starts
