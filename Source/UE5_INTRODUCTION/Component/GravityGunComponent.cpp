@@ -4,7 +4,9 @@
 #include "Component/GravityGunComponent.h"
 #include "Kismet/Gameplaystatics.h"
 #include "Character/MyCharacter.h"
+#include "Curves/CurveFloat.h"
 #include "PickUp/PickUp.h"
+#include "DataAsset/ThrowForceDataAsset.h"
 
 // Sets default values for this component's properties
 UGravityGunComponent::UGravityGunComponent()
@@ -79,6 +81,8 @@ void UGravityGunComponent::OnTakeObjectInputPressed()
 	if (!PickUpCube)
 		return;
 
+
+	UE_LOG(LogTemp, Log, TEXT("ets %s"), *CurrentPickUp->GetName());
 	//disable physics
 	PickUpCube->SetSimulatePhysics(false);
 
@@ -151,6 +155,16 @@ void UGravityGunComponent::SetCharacter(AMyCharacter* InCharacter)
 	Character = InCharacter;
 }
 
+float UGravityGunComponent::GetTimeToReachMaxThrowForce()
+{
+	return ThrowForceDataAsset->TimeToReachMaxThrowForce;
+}
+
+float UGravityGunComponent::GetCurrentTimeToReachMaxThrowForce()
+{
+	return TimerHoldingTrow;
+}
+
 void UGravityGunComponent::OnHoldPickUpDestroyed()
 {
 	//CurrentPickUp->OnPickUpDestroy.RemoveDynamic(this, &UGravityGunComponent::OnHoldPickUpDestroyed);
@@ -161,7 +175,13 @@ void UGravityGunComponent::OnHoldPickUpDestroyed()
 void UGravityGunComponent::UpdatePickUpLocation()
 {
 	if (!PickUpCube)
+	{
+		UE_LOG(LogTemp, Log, TEXT("upLoc"), RaycastSize);
 		return;
+
+	}
+
+	
 
 	FVector NewPickUpLocation = CameraManager->GetCameraLocation() + CameraManager->GetActorForwardVector() * PickUpDistanceFromPlayer;
 	CurrentPickUp->SetActorLocationAndRotation(NewPickUpLocation, CameraManager->GetActorQuat());
@@ -183,6 +203,24 @@ void UGravityGunComponent::ReleasePickUp(bool bThrow)
 		// if throw the pick up
 		if (bThrow)
 		{
+			float ThrowForce = 0.0f;
+			if (ThrowForceCurve)
+			{
+				ThrowForce = ThrowForceCurve->GetFloatValue(TimerHoldingTrow);
+			}
+			else
+			{
+				if (ThrowForceDataAsset)
+				{
+					float ThrowForceAlpha = FMath::Clamp(TimerHoldingTrow / ThrowForceDataAsset->TimeToReachMaxThrowForce, 0.f, 1.f);
+					ThrowForce = FMath::Lerp(ThrowForceDataAsset->MinThrowForce, ThrowForceDataAsset->MaxThrowForce, ThrowForceAlpha);
+					UE_LOG(LogTemp, Log, TEXT("Throw Force Alpha %f - throw force %f"), ThrowForceAlpha, ThrowForce);
+				}
+				else
+				{
+
+				}
+			}
 			FVector Impulse = CameraManager->GetActorForwardVector() * PickUpThrowForce;
 			PickUpCube->AddImpulse(Impulse);
 			FVector AngularImpulse = FVector(FMath::RandRange(.0, PickUpAngularForce.X), FMath::RandRange(.0, PickUpAngularForce.Y), FMath::RandRange(.0, PickUpAngularForce.Z));

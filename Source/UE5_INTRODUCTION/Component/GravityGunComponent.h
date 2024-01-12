@@ -31,6 +31,11 @@ public:
 	void OnThrowObjectInputReleased();
 	void OnUpSizeRaycastInputPressed();
 	void SetCharacter(class AMyCharacter* InCharacter);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GravityGun")
+	float GetTimeToReachMaxThrowForce();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GravityGun")
+	float GetCurrentTimeToReachMaxThrowForce();
 		
 
 	//Collision
@@ -85,6 +90,16 @@ protected:
 public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FPickUpTakenDelegate OnPickUpTake;
+
+	// Curve
+protected:
+	UPROPERTY(EditAnywhere, Category = "GravityGun| Curve")
+	class UCurveFloat* ThrowForceCurve = nullptr;
+
+	// Data Asset
+protected:
+	UPROPERTY(EditAnywhere, Category = "GravityGun| Data Asset")
+	class UThrowForceDataAsset* ThrowForceDataAsset = nullptr;
 
 	//Debug
 protected:

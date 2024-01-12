@@ -3,6 +3,7 @@
 #include "Controller/GravityGunController.h"
 #include "Controller/SpawnerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "UserWidget/PauseMenuUserWidget.h"
 #include "Goal/Goal.h"
 
 void AMyPlayerController::MoveForward(float Value)
@@ -60,6 +61,7 @@ void AMyPlayerController::SetupInputComponent()
 	InputComponent->BindAxis(MoveRightInputName, this, &AMyPlayerController::MoveRight);
 
 	InputComponent->BindAction(JumpInputName, EInputEvent::IE_Pressed, this, &AMyPlayerController::Jump);
+	InputComponent->BindAction(PauseMenuInputName, EInputEvent::IE_Pressed, this, &AMyPlayerController::OnPauseInputPressed);
 
 	//bid score
 	FInputActionBinding& ScoreInputActionBinding = InputComponent->BindAction(CountScoreInputName, EInputEvent::IE_Pressed, this, &AMyPlayerController::CountScore);
@@ -79,6 +81,26 @@ void AMyPlayerController::SetPawn(APawn* InPawn)
 	Jump();
 
 
+}
+
+float AMyPlayerController::GetXSensitivity()
+{
+	return MouseSensitivityX;
+}
+
+float AMyPlayerController::GetYSensitivity()
+{
+	return MouseSensitivityY;
+}
+
+void AMyPlayerController::SetXSensitivity(float NewSensitivity)
+{
+	MouseSensitivityX = NewSensitivity;
+}
+
+void AMyPlayerController::SetYSensitivity(float NewSensitivity)
+{
+	MouseSensitivityY = NewSensitivity;
 }
 
 void AMyPlayerController::AddPitchInput(float Val)
@@ -118,4 +140,18 @@ void AMyPlayerController::LateBeginPlay()
 
 	if (SpwanerController)
 		SpwanerController->SetupInputComponentSpawnerPickUp(Character, InputComponent);
+}
+
+void AMyPlayerController::OnPauseInputPressed()
+{
+	if (PauseMenuWidget)
+	{
+		//crea
+		UPauseMenuUserWidget* MenuWidget = Cast<UPauseMenuUserWidget>(CreateWidget<UPauseMenuUserWidget>(this, PauseMenuWidget));
+		if (MenuWidget)
+		{
+			MenuWidget->AddToViewport(0);
+			//MenuWidget->OpenMenu();
+		}
+	}
 }

@@ -29,6 +29,8 @@ protected:
 	FName LookRightInputName = FName();
 	UPROPERTY(EditAnywhere, Category = "Input|Score")
 	FName CountScoreInputName = FName();
+	UPROPERTY(EditAnywhere, Category = "Input|Pause")
+	FName PauseMenuInputName = FName();
 	
 
 protected:
@@ -57,6 +59,12 @@ protected:
 	float MouseSensitivityY = 1.f;
 
 public:
+	float GetXSensitivity();
+	float GetYSensitivity();
+
+	void SetXSensitivity(float NewSensitivity);
+	void SetYSensitivity(float NewSensitivity);
+
 	virtual void AddPitchInput(float Val) override;
 	virtual void AddYawInput(float Val) override;
 
@@ -73,4 +81,10 @@ protected:
 public:
 	virtual void BeginPlay() override;
 	void LateBeginPlay();
+
+	//Pause
+protected:
+	UPROPERTY(EditAnywhere, Category = "Pause")
+	TSubclassOf<class UPauseMenuUserWidget> PauseMenuWidget = nullptr;
+	void OnPauseInputPressed();
 };
